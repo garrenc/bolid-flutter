@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:radio_bolid/screens/playlist_screen.dart';
 import 'package:radio_bolid/widgets/change_theme_button.dart';
 
 import '../../screens/info_screen.dart';
@@ -34,7 +35,12 @@ class _TabsScreenState extends State<TabsScreen> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.radio),
-            label: 'Радио',),
+            label: 'Радио',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.playlist_play),
+            label: 'Плейлист',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.more_horiz),
             label: 'Контакты',
@@ -44,7 +50,7 @@ class _TabsScreenState extends State<TabsScreen> {
       body: IndexedStack(
         children: <Widget>[
           PlayScreen(),
-          //PlaylistScreen(),
+          PlaylistScreen(),
           const InfoScreen(),
         ],
         index: currentTab,

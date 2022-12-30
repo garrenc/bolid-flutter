@@ -77,10 +77,7 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   void initRadioPlayer() {
-    _radioPlayer.setChannel(
-        title: 'Радио Болид',
-        url: 'https://icecast-bulteam.cdnvideo.ru/bolid128',
-        imagePath: 'assets/images/bolidlogo.png');
+    _radioPlayer.setChannel(title: 'Радио Болид', url: 'https://icecast-bulteam.cdnvideo.ru/bolid128', imagePath: 'assets/images/bolidlogo.png');
 
     _radioPlayer.stateStream.listen((value) {
       setState(() {
@@ -97,14 +94,8 @@ class _PlayScreenState extends State<PlayScreen> {
 
   void toggleStream() async {
     _isHD
-        ? _radioPlayer.setChannel(
-            title: 'Радио Болид',
-            url: 'https://icecast-bulteam.cdnvideo.ru/bolid64',
-            imagePath: 'assets/images/bolidlogo.png')
-        : _radioPlayer.setChannel(
-            title: 'Радио Болид',
-            url: 'https://icecast-bulteam.cdnvideo.ru/bolid128',
-            imagePath: 'assets/images/bolidlogo.png');
+        ? _radioPlayer.setChannel(title: 'Радио Болид', url: 'https://icecast-bulteam.cdnvideo.ru/bolid64', imagePath: 'assets/images/bolidlogo.png')
+        : _radioPlayer.setChannel(title: 'Радио Болид', url: 'https://icecast-bulteam.cdnvideo.ru/bolid128', imagePath: 'assets/images/bolidlogo.png');
     _radioPlayer.pause();
     setState(() {
       _isHD = !_isHD;
@@ -115,10 +106,10 @@ class _PlayScreenState extends State<PlayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
-    bool isDark =
-        Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark;
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    var isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    bool isDark = Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -127,19 +118,20 @@ class _PlayScreenState extends State<PlayScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: isLandscape ? 900 : 500,
-              height: isLandscape ? 125 : 300,
-              padding: isLandscape ? null : const EdgeInsets.only(top: 60),
+              width: isLandscape ? 900 : width / 1.1,
+              height: isLandscape ? 125 : height / 3,
               child: Image.asset('assets/images/bolidlogo.png'),
             ),
+            SizedBox(height: height / 15),
             SizedBox(
-              height: 50,
-            ),
-            Text(
-              metadata?[0] ?? '',
-              softWrap: false,
-              overflow: TextOverflow.fade,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              width: width / 1.1,
+              child: Text(
+                metadata?[0] ?? '',
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.fade,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              ),
             ),
             Text(
               metadata?[1] ?? '',
@@ -147,7 +139,7 @@ class _PlayScreenState extends State<PlayScreen> {
               overflow: TextOverflow.fade,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
-            const SizedBox(height: 40),
+            SizedBox(height: height / 40),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
