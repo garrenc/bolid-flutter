@@ -39,8 +39,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> with WidgetsBindingObse
   }
 
   Widget _createListTile(BuildContext context, {required String artistName, required String trackName, required String time}) => Container(
-        margin: EdgeInsets.symmetric(vertical: 5),
-        height: MediaQuery.of(context).size.height / 8,
+        margin: EdgeInsets.symmetric(vertical: 8),
         child: ListTile(
           title: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -53,7 +52,10 @@ class _PlaylistScreenState extends State<PlaylistScreen> with WidgetsBindingObse
               ),
             ],
           ),
-          trailing: Chip(label: Text(time, style: TextStyle(color: Colors.white)), backgroundColor: Colors.red),
+          trailing: Chip(
+            label: Text(time, style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.red,
+          ),
         ),
       );
 

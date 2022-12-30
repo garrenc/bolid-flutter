@@ -13,7 +13,7 @@ class ThemeProvider extends ChangeNotifier {
 class MyThemes {
   static final darkTheme = ThemeData(
     scaffoldBackgroundColor: Colors.grey.shade800,
-    colorScheme: const ColorScheme.dark(),
+    colorScheme: const ColorScheme.dark(secondary: Colors.red),
     primarySwatch: Colors.red,
   );
 

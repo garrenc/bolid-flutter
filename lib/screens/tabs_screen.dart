@@ -34,8 +34,8 @@ class _TabsScreenState extends State<TabsScreen> {
         currentIndex: currentTab,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.radio),
-            label: 'Радио',
+            icon: Icon(Icons.play_arrow),
+            label: 'Плеер',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.playlist_play),
