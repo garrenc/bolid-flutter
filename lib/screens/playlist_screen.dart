@@ -11,19 +11,21 @@ class PlaylistScreen extends StatefulWidget {
   State<PlaylistScreen> createState() => _PlaylistScreenState();
 }
 
-class _PlaylistScreenState extends State<PlaylistScreen> with WidgetsBindingObserver {
+class _PlaylistScreenState extends State<PlaylistScreen> with WidgetsBindingObserver, MetadataObserver {
   bool isDark = false;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    MetaDataWorker.instance.start();
+    MetadataWorker.instance.addObserver(this);
+    MetadataWorker.instance.start();
   }
 
   void dispose() {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
-    MetaDataWorker.instance.stop();
+    MetadataWorker.instance.removeObserver(this);
+    MetadataWorker.instance.stop();
   }
 
   @override
@@ -34,7 +36,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> with WidgetsBindingObse
       children: ListTile.divideTiles(
           color: Colors.grey,
           context: context,
-          tiles: MetaDataWorker.metaData.reversed.map((e) => _createListTile(context, artistName: e.artistName, trackName: e.songName, time: DateFormat.Hm().format(e.dateTime)))).toList(),
+          tiles: MetadataWorker.metaData.reversed.map((e) => _createListTile(context, artistName: e.artistName, trackName: e.songName, time: DateFormat.Hm().format(e.dateTime)))).toList(),
     ));
   }
 
@@ -62,9 +64,14 @@ class _PlaylistScreenState extends State<PlaylistScreen> with WidgetsBindingObse
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused || state == AppLifecycleState.detached || state == AppLifecycleState.inactive) {
-      MetaDataWorker.instance.stop();
+      MetadataWorker.instance.stop();
     } else {
-      MetaDataWorker.instance.start();
+      MetadataWorker.instance.start();
     }
+  }
+
+  @override
+  void metadataListener() {
+    setState(() {});
   }
 }
