@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:radio_bolid/Notification_api.dart';
 import 'package:radio_player/radio_player.dart';
 import 'package:sound_mode/permission_handler.dart';
 
@@ -59,14 +58,6 @@ class _PlayScreenState extends State<PlayScreen> {
   @override
   void initState() {
     super.initState();
-
-    NotificationApi.init(initScheduled: true);
-    listenNotifications();
-    initRadioPlayer();
-  }
-
-  void listenNotifications() {
-    NotificationApi.onNotification.stream.listen(onClickedNotification);
     initRadioPlayer();
   }
 
