@@ -12,8 +12,7 @@ class InfoScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.only(
-                  right: 25, left: 25, top: 15, bottom: 10),
+              padding: const EdgeInsets.only(right: 25, left: 25, top: 15, bottom: 10),
               child: const Center(
                 child: Text(
                   'Контакты',
@@ -70,6 +69,7 @@ class InfoScreen extends StatelessWidget {
                       child: const Text(
                         'Позвонить в студию',
                         style: TextStyle(
+                          decoration: TextDecoration.underline,
                           fontSize: 15,
                         ),
                       ),
@@ -101,7 +101,40 @@ class InfoScreen extends StatelessWidget {
                       child: const Text(
                         'Позвонить по рекламе',
                         style: TextStyle(
+                          decoration: TextDecoration.underline,
                           fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(
+              color: Colors.grey,
+              indent: 20,
+              endIndent: 20,
+              thickness: 0.5,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.mail,
+                    size: 21,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: GestureDetector(
+                      onTap: () => launch('mailto:office@bolidfm.ru'),
+                      child: const Text(
+                        'office@bolidfm.ru',
+                        style: TextStyle(
+                          fontSize: 15,
+                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
@@ -132,6 +165,7 @@ class InfoScreen extends StatelessWidget {
                       child: const Text(
                         'bolidfm.ru',
                         style: TextStyle(
+                          decoration: TextDecoration.underline,
                           fontSize: 15,
                         ),
                       ),
@@ -164,7 +198,7 @@ class InfoScreen extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => launch('https://t.me/bolidfm_bot'),
+                    onTap: () => launch('https://t.me/radiobolid_bot'),
                     child: Container(
                       margin: const EdgeInsets.only(top: 20),
                       width: 50,

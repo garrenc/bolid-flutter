@@ -84,6 +84,7 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   void toggleStream() async {
+    bool playAfterChange = isPlaying;
     _isHD
         ? _radioPlayer.setChannel(title: 'Радио Болид', url: 'https://icecast-bulteam.cdnvideo.ru/bolid64', imagePath: 'assets/images/bolidlogo.png')
         : _radioPlayer.setChannel(title: 'Радио Болид', url: 'https://icecast-bulteam.cdnvideo.ru/bolid128', imagePath: 'assets/images/bolidlogo.png');
@@ -92,7 +93,7 @@ class _PlayScreenState extends State<PlayScreen> {
       _isHD = !_isHD;
     });
     await Future.delayed(Duration(milliseconds: 500));
-    _radioPlayer.play();
+    if (playAfterChange) _radioPlayer.play();
   }
 
   @override

@@ -1,4 +1,4 @@
-package fm.bolid.android
+package com.vr.radiobolid
 
 import io.flutter.embedding.android.FlutterActivity
 
