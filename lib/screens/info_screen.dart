@@ -37,7 +37,7 @@ class InfoScreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 20),
                     child: Text(
-                      'г. Пермь, ул. Куйбышева, 37, офис 602',
+                      'г. Пермь, ул. Куйбышева, 37, офис 506',
                       style: TextStyle(
                         fontSize: 15,
                       ),
