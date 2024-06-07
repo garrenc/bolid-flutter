@@ -61,14 +61,20 @@ class _PlayScreenState extends State<PlayScreen> {
     initRadioPlayer();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _radioPlayer.stop();
+  }
+
   void onClickedNotification(String? payload) {
     _radioPlayer.play();
     isSet = false;
     isOn = false;
   }
 
-  void initRadioPlayer() {
-    _radioPlayer.setChannel(title: 'Радио Болид', url: 'https://icecast-bulteam.cdnvideo.ru/bolid128', imagePath: 'assets/images/bolidlogo.png');
+  void initRadioPlayer() async {
+    await _radioPlayer.setChannel(title: 'Радио Болид', url: 'https://icecast-bulteam.cdnvideo.ru/bolid128', imagePath: 'assets/images/bolidlogo.png');
 
     _radioPlayer.stateStream.listen((value) {
       setState(() {
@@ -88,7 +94,7 @@ class _PlayScreenState extends State<PlayScreen> {
     _isHD
         ? _radioPlayer.setChannel(title: 'Радио Болид', url: 'https://icecast-bulteam.cdnvideo.ru/bolid64', imagePath: 'assets/images/bolidlogo.png')
         : _radioPlayer.setChannel(title: 'Радио Болид', url: 'https://icecast-bulteam.cdnvideo.ru/bolid128', imagePath: 'assets/images/bolidlogo.png');
-    _radioPlayer.pause();
+    _radioPlayer.stop();
     setState(() {
       _isHD = !_isHD;
     });
@@ -137,7 +143,9 @@ class _PlayScreenState extends State<PlayScreen> {
               children: [
                 IconButton(
                   iconSize: isLandscape ? 50 : 100,
-                  onPressed: isPlaying ? _radioPlayer.pause : _radioPlayer.play,
+                  onPressed: () async {
+                    isPlaying ? await _radioPlayer.stop() : await _radioPlayer.play();
+                  },
                   icon: isPlaying
                       ? Icon(
                           Icons.pause_circle_filled,
