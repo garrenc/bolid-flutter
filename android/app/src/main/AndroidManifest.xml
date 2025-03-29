@@ -2,11 +2,37 @@
     package="com.vr.radiobolid">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    
+    <!-- Declare that your app is available to Android Auto. -->
+    <uses-feature android:name="android.software.auto" android:required="false" />
+    <uses-feature android:name="android.hardware.type.automotive" android:required="false" />
    <application
         android:label="Радио Болид"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
+        <!-- Declare Android Auto support -->
+        <meta-data
+            android:name="com.google.android.gms.car.application"
+            android:resource="@xml/automotive_app_desc" />
+        <!-- Category for Android Auto media apps -->
+        <meta-data
+            android:name="com.google.android.gms.car.application.category"
+            android:value="android.intent.category.APP_MUSIC" />
+            
+        <!-- Media browser service for Android Auto -->
+        <service
+            android:name=".RadioMediaService"
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+            </intent-filter>
+        </service>
+        
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:radio_player/radio_player.dart';
-import 'package:sound_mode/permission_handler.dart';
+import 'package:flutter/services.dart';
 
 import '../theme_provider.dart';
 
@@ -16,61 +16,75 @@ class _PlayScreenState extends State<PlayScreen> {
   static RadioPlayer _radioPlayer = RadioPlayer();
   bool isPlaying = false;
   List<String>? metadata;
+
   bool isSet = false;
   bool isOn = false;
   bool isAllowed = false;
   bool _isHD = true;
-
-  checkGranted() async {
-    bool? isGranted = await PermissionHandler.permissionsGranted;
-
-    if (!isGranted!) {
-      await showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text('Показ уведомлений'),
-          content: const Text(
-            'Разрешите показ уведомлений в настройках',
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Отменить'),
-            ),
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
-                await PermissionHandler.openDoNotDisturbSetting();
-              },
-              child: const Text('Разрешить'),
-            )
-          ],
-        ),
-      );
-    }
-    if (isGranted) {
-      isAllowed = true;
-    }
-  }
+  late MethodChannel _androidAutoChannel;
 
   @override
   void initState() {
     super.initState();
+    _setupMethodChannel();
     initRadioPlayer();
+    _setupAndroidAuto();
+  }
+
+  void _setupMethodChannel() {
+    _androidAutoChannel = const MethodChannel('com.vr.radiobolid/android_auto');
+    _androidAutoChannel.setMethodCallHandler((call) async {
+      switch (call.method) {
+        case 'play':
+          await _radioPlayer.play();
+          setState(() {
+            isPlaying = true;
+          });
+          return null;
+        case 'pause':
+        case 'stop':
+          await _radioPlayer.stop();
+          setState(() {
+            isPlaying = false;
+          });
+          return null;
+        case 'getMediaItems':
+          return [
+            {
+              'id': 'bolid_radio',
+              'title': 'Радио Болид',
+              'artist': metadata != null && metadata!.isNotEmpty ? metadata![0] : '',
+              'album': metadata != null && metadata!.length > 1 ? metadata![1] : '',
+              'albumArt': 'assets/images/bolidlogo.png',
+              'playable': true,
+            }
+          ];
+        default:
+          throw PlatformException(
+            code: 'Unimplemented',
+            details: 'The method ${call.method} is not implemented',
+          );
+      }
+    });
+  }
+
+  Future<void> _setupAndroidAuto() async {
+    try {
+      await _androidAutoChannel.invokeMethod('setupAndroidAuto', {
+        'title': 'Радио Болид',
+        'artist': metadata != null && metadata!.isNotEmpty ? metadata![0] : '',
+        'album': metadata != null && metadata!.length > 1 ? metadata![1] : '',
+        'isPlaying': isPlaying,
+      });
+    } on PlatformException catch (e) {
+      print('Failed to setup Android Auto: ${e.message}');
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
     _radioPlayer.stop();
-  }
-
-  void onClickedNotification(String? payload) {
-    _radioPlayer.play();
-    isSet = false;
-    isOn = false;
   }
 
   void initRadioPlayer() async {
@@ -80,13 +94,28 @@ class _PlayScreenState extends State<PlayScreen> {
       setState(() {
         isPlaying = value;
       });
+      _updateAndroidAutoState();
     });
 
     _radioPlayer.metadataStream.listen((value) {
       setState(() {
         metadata = value;
       });
+      _updateAndroidAutoState();
     });
+  }
+
+  Future<void> _updateAndroidAutoState() async {
+    try {
+      await _androidAutoChannel.invokeMethod('updatePlaybackState', {
+        'title': 'Радио Болид',
+        'artist': metadata != null && metadata!.isNotEmpty ? metadata![0] : '',
+        'album': metadata != null && metadata!.length > 1 ? metadata![1] : '',
+        'isPlaying': isPlaying,
+      });
+    } on PlatformException catch (e) {
+      print('Failed to update Android Auto state: ${e.message}');
+    }
   }
 
   void toggleStream() async {
